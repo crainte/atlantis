@@ -103,7 +103,7 @@ func (p *DefaultProjectCommandBuilder) BuildApplyCommands(ctx *CommandContext, c
 func (p *DefaultProjectCommandBuilder) buildPlanAllCommands(ctx *CommandContext, commentFlags []string, verbose bool) ([]models.ProjectCommandContext, error) {
 	// Need to lock the workspace we're about to clone to.
 	workspace := DefaultWorkspace
-    repoRelDir := DefaultRepoRelDir
+	repoRelDir := DefaultRepoRelDir
 	unlockFn, err := p.WorkingDirLocker.TryLock(ctx.BaseRepo.FullName, ctx.Pull.Num, repoRelDir, workspace)
 	if err != nil {
 		ctx.Log.Warn("directory and workspace combination was locked")
@@ -169,14 +169,14 @@ func (p *DefaultProjectCommandBuilder) buildPlanAllCommands(ctx *CommandContext,
 // cmd must be for only one project.
 func (p *DefaultProjectCommandBuilder) buildProjectPlanCommand(ctx *CommandContext, cmd *CommentCommand) (models.ProjectCommandContext, error) {
 	workspace := DefaultWorkspace
-    repoRelDir := DefaultRepoRelDir
+	repoRelDir := DefaultRepoRelDir
 	if cmd.Workspace != "" {
 		workspace = cmd.Workspace
 	}
 
-    if cmd.RepoRelDir != "" {
-        repoRelDir = cmd.RepoRelDir
-    }
+	if cmd.RepoRelDir != "" {
+		repoRelDir = cmd.RepoRelDir
+	}
 
 	var pcc models.ProjectCommandContext
 	ctx.Log.Debug("building plan command")
@@ -231,7 +231,7 @@ func (p *DefaultProjectCommandBuilder) buildApplyAllCommands(ctx *CommandContext
 // identified by cmd.
 func (p *DefaultProjectCommandBuilder) buildProjectApplyCommand(ctx *CommandContext, cmd *CommentCommand) (models.ProjectCommandContext, error) {
 	workspace := DefaultWorkspace
-    repoRelDir := DefaultRepoRelDir
+	repoRelDir := DefaultRepoRelDir
 	if cmd.Workspace != "" {
 		workspace = cmd.Workspace
 	}

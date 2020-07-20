@@ -65,9 +65,9 @@ func TestDeleteLock_Success(t *testing.T) {
 		BaseRepo: models.Repo{FullName: "owner/repo"},
 	}
 	When(l.Unlock("id")).ThenReturn(&models.ProjectLock{
-		Pull:      pull,
-        RepoRelDir: ".",
-		Workspace: "workspace",
+		Pull:       pull,
+		RepoRelDir: ".",
+		Workspace:  "workspace",
 		Project: models.Project{
 			Path:         "path",
 			RepoFullName: "owner/repo",
