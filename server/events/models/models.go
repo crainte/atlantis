@@ -211,6 +211,8 @@ type ProjectLock struct {
 	// User is the username of the user that ran the command
 	// that created this lock.
 	User User
+	// RepoRelDir is the Repository Relative directory
+	RepoRelDir string
 	// Workspace is the Terraform workspace that this
 	// lock is being held against.
 	Workspace string
