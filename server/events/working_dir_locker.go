@@ -80,11 +80,16 @@ func (d *DefaultWorkingDirLocker) TryLock(repoFullName string, pullNum int, repo
 
 	pullKey := d.pullKey(repoFullName, pullNum)
 	workspaceKey := d.workspaceKey(repoFullName, pullNum, repoRelDir, workspace)
+	// this will support old locks after an upgrade
+	legacyWorkspaceKey := d.legacyWorkspaceKey(repoFullName, pullNum, workspace)
+	fmt.Printf("Pull Key: %s\n", pullKey)
+	fmt.Printf("Workspace Key: %s\n", workspaceKey)
+	fmt.Printf("Legacy Workspace Key: %s\n", legacyWorkspaceKey)
 	for _, l := range d.locks {
-		if l == pullKey || l == workspaceKey {
-			return func() {}, fmt.Errorf("the directory %s with workspace %s is currently locked by another"+
+		if l == pullKey || l == workspaceKey || l == legacyWorkspaceKey {
+			return func() {}, fmt.Errorf("the workspace %s is currently locked by another"+
 				" command that is running for this pull request–"+
-				"wait until the previous command is complete and try again", repoRelDir, workspace)
+				"wait until the previous command is complete and try again", workspace)
 		}
 	}
 	d.locks = append(d.locks, workspaceKey)
@@ -99,7 +104,9 @@ func (d *DefaultWorkingDirLocker) unlock(repoFullName string, pullNum int, repoR
 	defer d.mutex.Unlock()
 
 	workspaceKey := d.workspaceKey(repoFullName, pullNum, repoRelDir, workspace)
+	legacyWorkspaceKey := d.legacyWorkspaceKey(repoFullName, pullNum, workspace)
 	d.removeLock(workspaceKey)
+	d.removeLock(legacyWorkspaceKey)
 }
 
 // Unlock unlocks all workspaces for this pull.
@@ -119,6 +126,10 @@ func (d *DefaultWorkingDirLocker) removeLock(key string) {
 		}
 	}
 	d.locks = newLocks
+}
+
+func (d *DefaultWorkingDirLocker) legacyWorkspaceKey(repo string, pull int, workspace string) string {
+	return fmt.Sprintf("%s/%s", d.pullKey(repo, pull), workspace)
 }
 
 func (d *DefaultWorkingDirLocker) workspaceKey(repo string, pull int, repoRelDir string, workspace string) string {
